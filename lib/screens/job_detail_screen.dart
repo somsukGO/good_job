@@ -102,7 +102,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: Dimensions.SIZE_DEFAULT),
                   color: ColorSources.dynamicPrimary,
                   width: double.infinity,
-                  height: 195,
+                  height: 200,
                   child: Column(
                     children: [
                       addVerticalSpace(Dimensions.SIZE_EXTRA_SMALL),
@@ -425,7 +425,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                           memberId: int.parse(_userController.user.value.id),
                           degreeId: int.parse(_job.jobDetail.degreeId),
                           majorId: int.parse(_job.jobDetail.majorId),
-                          postJobDetailId: int.parse(_job.id),
+                          postJobDetailId: int.parse(_job.jobDetail.id),
                         );
                         Get.toNamed(SendApplyScreen.routeName, arguments: apply);
                       },

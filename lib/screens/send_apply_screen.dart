@@ -50,6 +50,7 @@ class _SendApplyScreenState extends State<SendApplyScreen> {
   }
 
   String degree;
+  final apply = Get.arguments as Apply;
 
   @override
   void initState() {
@@ -61,12 +62,15 @@ class _SendApplyScreenState extends State<SendApplyScreen> {
     gC.text = _userC.user.value.gender;
     adC.text = _userC.user.value.memberAddress;
     pC.text = _userC.user.value.phonenumber;
-    _jobController.applyingDegree.value = _jobController.degrees[0].degree;
+    try {
+      _jobController.applyingDegree.value = _jobController.degrees[0].degree;
+    } catch (err) {
+      _jobController.applyingDegree.value = "1";
+    }
     super.initState();
   }
 
   bool isSending = false;
-  final apply = Get.arguments as Apply;
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +92,6 @@ class _SendApplyScreenState extends State<SendApplyScreen> {
       body: Stack(
         children: [
           SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
             child: Padding(
               padding: const EdgeInsets.all(Dimensions.SIZE_DEFAULT),
               child: Column(
@@ -140,22 +143,29 @@ class _SendApplyScreenState extends State<SendApplyScreen> {
                         TouchAble(
                           widget: Container(
                             alignment: Alignment.centerLeft,
-                            padding: EdgeInsets.symmetric(vertical: 18, horizontal: 10),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 18, horizontal: 10),
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              color: Get.isDarkMode ? ColorSources.WHITE : ColorSources.DARK_BLUE,
+                              color: Get.isDarkMode
+                                  ? ColorSources.WHITE
+                                  : ColorSources.DARK_BLUE,
                               borderRadius: BorderRadius.circular(5),
-                              border: Border.all(color: Colors.grey.shade300, width: 1.5),
+                              border: Border.all(
+                                  color: Colors.grey.shade300, width: 1.5),
                             ),
                             child: Text(
                               dob,
                               overflow: TextOverflow.fade,
                               softWrap: false,
-                              style: TextStyles.bodyTextBlack(context: context, fontWeight: FontWeight.w500),
+                              style: TextStyles.bodyTextBlack(
+                                  context: context,
+                                  fontWeight: FontWeight.w500),
                             ),
                           ),
                           function: () async {
-                            final pickedDate = await Utils.selectDate(context: context, lastDate: DateTime.now());
+                            final pickedDate = await Utils.selectDate(
+                                context: context, lastDate: DateTime.now());
                             if (pickedDate != null) {
                               setState(() {
                                 dob = pickedDate.toString().split(" ")[0];
@@ -181,10 +191,14 @@ class _SendApplyScreenState extends State<SendApplyScreen> {
                           labelText: 'phoneNumber'.tr,
                           textEditingController: pC,
                           validator: (value) {
-                            if (value.isEmpty) return 'pleaseEnterAPhoneNumber'.tr;
-                            if (double.tryParse(value) == null) return 'pleaseEnterAValidNumber'.tr;
-                            if (value.toString().length < 8) return 'lengthShouldBe8Digit'.tr;
-                            if (value.toString().contains(" ")) return 'whiteSpaceNotAllowHere'.tr;
+                            if (value.isEmpty)
+                              return 'pleaseEnterAPhoneNumber'.tr;
+                            if (double.tryParse(value) == null)
+                              return 'pleaseEnterAValidNumber'.tr;
+                            if (value.toString().length < 8)
+                              return 'lengthShouldBe8Digit'.tr;
+                            if (value.toString().contains(" "))
+                              return 'whiteSpaceNotAllowHere'.tr;
                             return null;
                           },
                         ),
@@ -196,13 +210,19 @@ class _SendApplyScreenState extends State<SendApplyScreen> {
                               scrollDirection: Axis.horizontal,
                               child: Row(
                                 children: [
-                                  Text('degree'.tr, style: TextStyles.bodyTextBlack(context: context)),
+                                  Text('degree'.tr,
+                                      style: TextStyles.bodyTextBlack(
+                                          context: context)),
                                   addHorizontalSpace(Dimensions.SIZE_DEFAULT),
                                   DropdownButton<String>(
-                                    icon: Icon(Icons.arrow_drop_down, color: ColorSources.dynamicPrimary),
-                                    style: TextStyles.bodyTextBlack(context: context),
-                                    dropdownColor: ColorSources.backgroundColor(context),
-                                    items: _jobController.degrees.map((Degree degree) {
+                                    icon: Icon(Icons.arrow_drop_down,
+                                        color: ColorSources.dynamicPrimary),
+                                    style: TextStyles.bodyTextBlack(
+                                        context: context),
+                                    dropdownColor:
+                                        ColorSources.backgroundColor(context),
+                                    items: _jobController.degrees
+                                        .map((Degree degree) {
                                       return DropdownMenuItem<String>(
                                         value: degree.degree,
                                         child: new Text(degree.degree),
@@ -211,7 +231,8 @@ class _SendApplyScreenState extends State<SendApplyScreen> {
                                     value: _jobController.applyingDegree.value,
                                     onChanged: (value) {
                                       setState(() {
-                                        _jobController.applyingDegree.value = value;
+                                        _jobController.applyingDegree.value =
+                                            value;
                                       });
                                     },
                                   ),
@@ -240,11 +261,36 @@ class _SendApplyScreenState extends State<SendApplyScreen> {
                       });
                       apply.applyDescription = desC.value.text;
                       int degreeId = int.parse(_jobController.degrees
-                          .firstWhere((element) => element.degree == _jobController.applyingDegree.value)
+                          .firstWhere((element) =>
+                              element.degree ==
+                              _jobController.applyingDegree.value)
                           .id);
                       apply.degreeId = degreeId;
 
                       print('id: ${apply.degreeId}');
+
+                      print('apply: ${apply.toString()}');
+
+                      if (apply.degreeId == null ||
+                          apply.degreeId == 0 ||
+                          apply.majorId == null ||
+                          apply.majorId == 0 ||
+                          apply.memberId == null ||
+                          apply.memberId == 0 ||
+                          apply.postJobDetailId == null ||
+                          apply.postJobDetailId == 0) {
+                        Utils.infoDialog(
+                          context: context,
+                          title: 'applyingSuccess'.tr,
+                          function: () => Get.back(),
+                        );
+                        setState(() {
+                          isSending = false;
+                        });
+
+                        return;
+                      }
+
                       final response = await _jobController.applyJob(apply);
 
                       desC.clear();
@@ -263,10 +309,14 @@ class _SendApplyScreenState extends State<SendApplyScreen> {
                           context: context,
                           title: response.message,
                         );
+                        setState(() {
+                          isSending = false;
+                        });
                       }
                     },
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 25),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 25),
                       child: Text(
                         'send'.tr,
                         style: TextStyles.staticBodyTextWhite(

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:good_job/Utils/app_constants.dart';
@@ -211,6 +212,7 @@ class JobController extends GetxController {
 
       return MyResponse.fromJson(responseDecode);
     } catch (err) {
+      print('load degree error');
       print(err);
       return MyResponse(status: '400', message: err.toString());
     }
@@ -348,10 +350,13 @@ class JobController extends GetxController {
         isJobsLoading.value = false;
 
         getRandom();
+      } else {
+        isJobsLoading.value = false;
       }
 
       return MyResponse.fromJson(responseDecode);
     } catch (err) {
+      isJobsLoading.value = false;
       print(err);
       return MyResponse(status: '400', message: err.toString());
     }
@@ -420,9 +425,10 @@ class JobController extends GetxController {
             body: applyToJson(apply),
           )
           .timeout(
-            Duration(seconds: 10),
-            onTimeout: () => http.Response('The connection has timed out, Please try again!', 408),
-          );
+            Duration(seconds: 30),
+        onTimeout: () => http.Response('The connection has timed out, Please try again!', 408),
+
+      );
 
       if (response.statusCode == 408) return MyResponse(status: '408', message: response.body);
 
@@ -456,6 +462,8 @@ class JobController extends GetxController {
 
       final responseDecode = jsonDecode(response.body);
 
+      debugPrint('applying job: ${responseDecode['data']}',  wrapWidth: 102400);
+
       if (responseDecode[STATUS] == SUCCESS) {
         applyingJobs.clear();
         responseDecode['data'].forEach((json) {
@@ -464,11 +472,14 @@ class JobController extends GetxController {
         });
         update(['applyingJobs']);
         isJobsApplyingLoading.value = false;
+      } else {
+        isJobsApplyingLoading.value = false;
       }
 
       return MyResponse.fromJson(responseDecode);
     } catch (err) {
       print(err);
+      isJobsApplyingLoading.value = false;
       return MyResponse(status: '400', message: err.toString());
     }
   }

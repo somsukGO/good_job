@@ -38,10 +38,17 @@ class _HomeScreenState extends State<HomeScreen> {
       if (_userController.fromLogin.value) {
         await _userController.getMember();
 
-        var firstName = _userController.user.value.memberName == null ? 'Guest' : _userController.user.value.memberName;
-        var lastName = _userController.user.value.memberLastname == null ? '' : _userController.user.value.memberLastname;
+        var firstName = _userController.user.value.memberName == null
+            ? 'Guest'
+            : _userController.user.value.memberName;
+        var lastName = _userController.user.value.memberLastname == null
+            ? ''
+            : _userController.user.value.memberLastname;
 
-        Utils.snackbar(context: context, title: 'loginSuccess'.tr, message: "${'welcomeBack'.tr} $firstName $lastName");
+        Utils.snackbar(
+            context: context,
+            title: 'loginSuccess'.tr,
+            message: "${'welcomeBack'.tr} $firstName $lastName");
         _userController.fromLogin.value = false;
         _userController.fromLogout.value = true;
       }
@@ -60,7 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
       _jobController.loadPosition();
     }
 
-    RefreshController _refreshController = RefreshController(initialRefresh: false);
+    RefreshController _refreshController =
+        RefreshController(initialRefresh: false);
 
     void _onRefresh() async {
       _jobController.isJobsLoading.value = true;
@@ -143,28 +151,42 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Column(
                                         children: [
                                           Intro(),
-                                          addVerticalSpace(Dimensions.SIZE_DEFAULT),
+                                          addVerticalSpace(
+                                              Dimensions.SIZE_DEFAULT),
                                           LandingJobs(),
-                                          addVerticalSpace(Dimensions.SIZE_SMALL),
+                                          addVerticalSpace(
+                                              Dimensions.SIZE_SMALL),
                                         ],
                                       ),
                                     Card(
                                       elevation: 0.3,
-                                      margin: const EdgeInsets.symmetric(horizontal: Dimensions.SIZE_DEFAULT),
-                                      color: Get.isDarkMode ? ColorSources.WHITE : Color(0xff283847),
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: Dimensions.SIZE_DEFAULT),
+                                      color: Get.isDarkMode
+                                          ? ColorSources.WHITE
+                                          : Color(0xff283847),
                                       child: TouchAble(
                                         radius: 4,
                                         function: () {
-                                          Get.toNamed(JobDetailScreen.routeName, arguments: _jobController.jobs[index]);
+                                          Get.toNamed(JobDetailScreen.routeName,
+                                              arguments:
+                                                  _jobController.jobs[index]);
                                         },
                                         widget: Container(
-                                          padding: const EdgeInsets.all(Dimensions.SIZE_SMALL),
+                                          padding: const EdgeInsets.all(
+                                              Dimensions.SIZE_SMALL),
                                           height: 85,
                                           child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
                                             children: [
                                               ClipRRect(
-                                                child: controller.jobs[index].image == "" || controller.jobs[index].image == null
+                                                child: controller.jobs[index]
+                                                                .image ==
+                                                            "" ||
+                                                        controller.jobs[index]
+                                                                .image ==
+                                                            null
                                                     ? Image.asset(
                                                         ImageSources.GOOD_JOB,
                                                         width: 40,
@@ -177,61 +199,96 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         height: 40,
                                                         fit: BoxFit.fill,
                                                       ),
-                                                borderRadius: BorderRadius.circular(10),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
                                               ),
-                                              addHorizontalSpace(Dimensions.SIZE_DEFAULT),
+                                              addHorizontalSpace(
+                                                  Dimensions.SIZE_DEFAULT),
                                               Column(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
                                                   Container(
                                                     child: Text(
                                                       '${controller.jobs[index].companyName}, ${controller.jobs[index].address}',
-                                                      overflow: TextOverflow.fade,
+                                                      overflow:
+                                                          TextOverflow.fade,
                                                       softWrap: false,
                                                       style: TextStyle(
-                                                        color: Get.isDarkMode ? ColorSources.BLACK_45 : ColorSources.WHITE_GREY_1,
-                                                        fontWeight: FontWeight.w400,
+                                                        color: Get.isDarkMode
+                                                            ? ColorSources
+                                                                .BLACK_45
+                                                            : ColorSources
+                                                                .WHITE_GREY_1,
+                                                        fontWeight:
+                                                            FontWeight.w400,
                                                         fontSize: 12,
                                                         fontFamily: 'Roboto',
                                                       ),
                                                     ),
-                                                    width: size.width - (61 + Dimensions.SIZE_DEFAULT * 5),
+                                                    width: size.width -
+                                                        (61 +
+                                                            Dimensions
+                                                                    .SIZE_DEFAULT *
+                                                                5),
                                                   ),
                                                   Container(
                                                     child: Text(
                                                       '${controller.jobs[index].jobDetail.jobName}',
-                                                      overflow: TextOverflow.fade,
+                                                      overflow:
+                                                          TextOverflow.fade,
                                                       softWrap: false,
                                                       style: TextStyle(
-                                                        color: ColorSources.black(context),
-                                                        fontWeight: FontWeight.normal,
+                                                        color:
+                                                            ColorSources.black(
+                                                                context),
+                                                        fontWeight:
+                                                            FontWeight.normal,
                                                         fontSize: 18,
                                                         letterSpacing: 0.5,
                                                         fontFamily: 'Roboto',
                                                       ),
                                                     ),
-                                                    width: size.width - (61 + Dimensions.SIZE_DEFAULT * 5),
+                                                    width: size.width -
+                                                        (61 +
+                                                            Dimensions
+                                                                    .SIZE_DEFAULT *
+                                                                5),
                                                   ),
                                                   Container(
                                                     child: Text(
                                                       '${controller.jobs[index].jobDetail.salaryRate}',
-                                                      overflow: TextOverflow.fade,
+                                                      overflow:
+                                                          TextOverflow.fade,
                                                       softWrap: false,
                                                       style: TextStyle(
-                                                        color: Get.isDarkMode ? ColorSources.BLACK_54 : ColorSources.WHITE_GREY_2,
-                                                        fontWeight: FontWeight.normal,
+                                                        color: Get.isDarkMode
+                                                            ? ColorSources
+                                                                .BLACK_54
+                                                            : ColorSources
+                                                                .WHITE_GREY_2,
+                                                        fontWeight:
+                                                            FontWeight.normal,
                                                         fontSize: 15,
                                                         fontFamily: 'Roboto',
                                                       ),
                                                     ),
-                                                    width: size.width - (61 + Dimensions.SIZE_DEFAULT * 5),
+                                                    width: size.width -
+                                                        (61 +
+                                                            Dimensions
+                                                                    .SIZE_DEFAULT *
+                                                                5),
                                                   ),
                                                 ],
                                               ),
                                               Flexible(
                                                 child: Text(
                                                   "${Utils.daysBetween(controller.jobs[index].jobDetail.date)} ${'days'.tr}",
-                                                  style: TextStyles.bodyTextBlack(context: context, fontSize: 12),
+                                                  style:
+                                                      TextStyles.bodyTextBlack(
+                                                          context: context,
+                                                          fontSize: 12),
                                                 ),
                                               ),
                                             ],
@@ -306,13 +363,14 @@ class _LandingJobsState extends State<LandingJobs> {
             width: size.width - Dimensions.SIZE_DEFAULT * 2,
             child: Text(
               'recommended'.tr,
-              style: TextStyles.bodyTextBlack(context: context, fontWeight: FontWeight.w600, fontSize: 16),
+              style: TextStyles.bodyTextBlack(
+                  context: context, fontWeight: FontWeight.w600, fontSize: 16),
             ),
           ),
         ),
         addVerticalSpace(Dimensions.SIZE_SMALL),
         Container(
-          height: 145,
+          height: 147,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             physics: BouncingScrollPhysics(),
@@ -383,7 +441,9 @@ class _LandingJobsState extends State<LandingJobs> {
                 child: TouchAble(
                   radius: 15,
                   function: () {
-                    Get.toNamed(JobDetailScreen.routeName, arguments: _jobController.jobs[index]);
+                    Get.toNamed(JobDetailScreen.routeName,
+                        arguments: _jobController
+                            .jobs[_jobController.randomIndex[index]]);
                   },
                   widget: Container(
                     width: 250,
@@ -407,8 +467,16 @@ class _LandingJobsState extends State<LandingJobs> {
                           child: Row(
                             children: [
                               ClipRRect(
-                                child: _jobController.jobs[_jobController.randomIndex[index]].image == "" ||
-                                        _jobController.jobs[_jobController.randomIndex[index]].image == null
+                                child: _jobController
+                                                .jobs[_jobController
+                                                    .randomIndex[index]]
+                                                .image ==
+                                            "" ||
+                                        _jobController
+                                                .jobs[_jobController
+                                                    .randomIndex[index]]
+                                                .image ==
+                                            null
                                     ? Image.asset(
                                         ImageSources.GOOD_JOB,
                                         width: 50,
@@ -430,14 +498,21 @@ class _LandingJobsState extends State<LandingJobs> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      _jobController.jobs[_jobController.randomIndex[index]].companyName,
+                                      _jobController
+                                          .jobs[
+                                              _jobController.randomIndex[index]]
+                                          .companyName,
                                       overflow: TextOverflow.fade,
                                       softWrap: false,
                                       style: companyNameTextStyle,
                                     ),
                                     addVerticalSpace(5),
                                     Text(
-                                      _jobController.jobs[_jobController.randomIndex[index]].jobDetail.jobName,
+                                      _jobController
+                                          .jobs[
+                                              _jobController.randomIndex[index]]
+                                          .jobDetail
+                                          .jobName,
                                       style: positionTextStyle,
                                       overflow: TextOverflow.fade,
                                       softWrap: false,
@@ -451,14 +526,16 @@ class _LandingJobsState extends State<LandingJobs> {
                         ),
                         addVerticalSpace(15),
                         Text(
-                          _jobController.jobs[_jobController.randomIndex[index]].jobDetail.salaryRate,
+                          _jobController.jobs[_jobController.randomIndex[index]]
+                              .jobDetail.salaryRate,
                           style: salaryTextStyle,
                           overflow: TextOverflow.fade,
                           softWrap: false,
                         ),
                         addVerticalSpace(5),
                         Text(
-                          _jobController.jobs[_jobController.randomIndex[index]].address,
+                          _jobController
+                              .jobs[_jobController.randomIndex[index]].address,
                           style: addressTextStyle,
                           overflow: TextOverflow.fade,
                           softWrap: false,
@@ -469,7 +546,8 @@ class _LandingJobsState extends State<LandingJobs> {
                 ),
               );
             },
-            itemCount: _jobController.jobs.length > 5 ? 5 : _jobController.jobs.length,
+            itemCount:
+                _jobController.jobs.length > 5 ? 5 : _jobController.jobs.length,
           ),
         ),
       ],
